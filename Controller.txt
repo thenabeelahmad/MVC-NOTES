@@ -1,0 +1,75 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using DatabaseConnectivityG1.Database;
+using System.Data;
+using System.Data.SqlClient;
+
+namespace DatabaseConnectivityG1.Controllers
+{
+    public class HomeController : Controller
+    {
+        //
+        // GET: /Home/
+        DBManager dm = new DBManager(); 
+        public ActionResult Index()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Index(FormCollection frm)
+        {
+            string nam = frm[0];
+            string city = frm[1];
+            string email = frm[2];
+            string prof = frm[3];
+           
+            
+            string dt=DateTime.Now.ToString("dd MMMM yyyy");
+            string q = "insert into tbl_customer values('" + nam + "','" + city + "','" + email + "','" + prof + "','" + dt + "')";
+            bool res = dm.InsertUpdateDelete(q);
+            if (res == true)
+            {
+                ViewBag.confirm = "Record Inserted Successfully";
+            }
+            else
+            {
+                ViewBag.confirm = "Database Error";
+            }
+              return View();
+        }
+        public ActionResult DisplayRecords()
+        {
+            string q = "select * from tbl_customer";
+            DataTable dt = new DataTable();
+            dt = dm.ReadBulkData(q);
+            string tbl = "";
+            tbl = "<table border='1' class='table table-striped'>";
+            tbl += "<tr>";
+            tbl += "<th>Cid</th><th>Name</th><th>City</th><th>Email</th><th>Professon</th><th>Date</th>";
+            tbl += "</tr>";
+            int i;
+            for (i = 0; i < dt.Rows.Count; i++)
+            {
+                tbl += "<tr>";
+                tbl += "<td>" + dt.Rows[i][0] + "</td>";
+                tbl += "<td>" + dt.Rows[i][1] + "</td>";
+                tbl += "<td>" + dt.Rows[i][2] + "</td>";
+                tbl += "<td>" + dt.Rows[i][3] + "</td>";
+                tbl += "<td>" + dt.Rows[i][4] + "</td>";
+                tbl += "<td>" + dt.Rows[i][5] + "</td>";
+                tbl += "</tr>";
+                
+            }
+            ViewBag.table = tbl;
+
+            
+            
+            
+            
+            return View();
+        }
+    }
+}

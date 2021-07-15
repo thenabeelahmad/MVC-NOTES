@@ -1,0 +1,4 @@
+Array in Jquery or Java script
+---------------------------------------
+ var n = [];
+var n = ["C++", "C", "Java", "JavaScript", "Asp.net", "Python", "PHP"];
